@@ -28,7 +28,7 @@ SECRET_KEY = str(os.getenv("SECRET_KEY"))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = str(os.getenv['ALLOWED_HOSTS'])
 
 
 # Application definition
@@ -82,10 +82,11 @@ WSGI_APPLICATION = 'todo_drf_auth.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'HOST': 'db', # set in docker-compose.yml
-        'PORT': 5432 # default postgres port
+        'NAME': str(os.getenv('DATABASE_NAME')),
+        'USER': str(os.getenv('DATABASE_USER')),
+        'PASSWORD': str(os.getenv('DATABASE_PASSWORD')),
+        'HOST': str(os.getenv('DATABASE_HOST')), # set in docker-compose.yml
+        'PORT': int(os.getenv('DATABASE_PORT')) # default postgres port
     }
 }
 
@@ -128,6 +129,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# Collects production server CSS
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 REST_FRAMEWORK = {

@@ -5,13 +5,14 @@ services:
     image: "postgres:11"
     environment:
       - "POSTGRES_HOST_AUTH_METHOD=trust"
-    env_file:
-      - db.env
+      - "POSTGRES_DB=postgres"
+      - "POSTGRES_USER=postgres"
+      - "POSTGRES_PASSWORD=postgres"
     volumes:
       - postgres_data:/var/lib/postgresql/data/
   web:
     build: .
-    command: python /code/manage.py runserver 0.0.0.0:8000
+    command: gunicorn todo_drf_auth.wsgi:application --bind 0.0.0.0:8000 --workers 4
     volumes:
       - .:/code
     ports:
