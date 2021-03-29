@@ -12,11 +12,12 @@ djangorestframework-simplejwt = "^4.6.0"
 whitenoise = "^5.2.0"
 Django = "^3.1.7"
 black = "^20.8b1"
-python-dotenv = "^0.15.0"
 flake8 = "^3.9.0"
 djangorestframework = "^3.12.2"
 psycopg2-binary = "^2.8.6"
 psycopg2 = "^2.8.6"
+django-cors-headers = "^3.7.0"
+django-environ = "^0.4.5"
 
 [tool.poetry.dev-dependencies]
 

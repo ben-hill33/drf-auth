@@ -11,9 +11,14 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
 from pathlib import Path
-from dotenv import load_dotenv
+import environ
 
-load_dotenv()
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+
+# reads .env
+environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,12 +28,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = str(os.getenv("SECRET_KEY")) 
+SECRET_KEY = env.str("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool('DEBUG')
 
-ALLOWED_HOSTS = str(os.getenv['ALLOWED_HOSTS'])
+ALLOWED_HOSTS = tuple(env.list('ALLOWED_HOSTS'))
 
 
 # Application definition
@@ -42,9 +47,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'api.apps.ApiConfig',
     'rest_framework',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -82,11 +89,11 @@ WSGI_APPLICATION = 'todo_drf_auth.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': str(os.getenv('DATABASE_NAME')),
-        'USER': str(os.getenv('DATABASE_USER')),
-        'PASSWORD': str(os.getenv('DATABASE_PASSWORD')),
-        'HOST': str(os.getenv('DATABASE_HOST')), # set in docker-compose.yml
-        'PORT': int(os.getenv('DATABASE_PORT')) # default postgres port
+        'NAME': env('DATABASE_NAME'),
+        'USER': env('DATABASE_USER'),
+        'PASSWORD': env('DATABASE_PASSWORD'),
+        'HOST': env('DATABASE_HOST'), # set in docker-compose.yml
+        'PORT': env('DATABASE_PORT'), # default postgres port
     }
 }
 
@@ -140,3 +147,6 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
 }
+
+CORS_ORIGIN_WHITELIST = tuple(env.list("ALLOWED_ORIGINS"))
+CORS_ALLOW_ALL_ORIGINS = env.bool("ALLOW_ALL_ORIGINS")
